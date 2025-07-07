@@ -1,0 +1,47 @@
+---
+- name: Atualizar a cache e os pacotes
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Instalar dependências Python
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+    state: present
+
+- name: Instalar cliente Mysql
+  ansible.builtin.apt:
+    name: mysql-client
+    state: present
+
+- name: Instalar o Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Clonar o repo da app
+  ansible.builtin.git:
+    repo: https://github.com/Mateus-Sebastiao/infra-bookmark-devops
+    dest: /srv/infra-bookmark-devops
+    version: main
+    force: yes
+
+- name: Criar virtualenv e instalar as dependências da aplicação
+  ansible.builtin.pip:
+    requirements: /srv/infra-bookmark-devops/bookmark-app/requirements.txt
+    virtualenv: /srv/infra-bookmark-devops/bookmark-app/venv
+    virtualenv_command: python3 -m venv
+
+- name: Copiar .env.example para .env
+  ansible.builtin.copy:
+    src: /srv/infra-bookmark-devops/bookmark-app/.env.example
+    dest: /srv/infra-bookmark-devops/bookmark-app/.env
+    remote_src: yes
+
+- name: Remover .env.example
+  ansible.builtin.file:
+    path: /srv/infra-bookmark-devops/bookmark-app/.env.example
+    state: absent

@@ -1,0 +1,7 @@
+---
+- name: Iniciar e habilitar o serviço do Gunicorn
+  ansible.builtin.systemd:
+    name: gunicorn
+    state: started
+    enabled: true
+  listen: "Reiniciar o gunicorn"

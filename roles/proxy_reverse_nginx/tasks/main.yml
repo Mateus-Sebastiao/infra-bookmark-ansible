@@ -1,0 +1,19 @@
+---
+- name: Copiar as configurações
+  ansible.builtin.copy:
+    src: /srv/infra-bookmark-devops/deploy/nginx.conf
+    dest: /etc/nginx/sites-available/bookmark.conf
+    remote_src: yes
+
+- name: Criar link simbólico para ativar o site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/bookmark.conf
+    dest: /etc/nginx/sites-enabled/bookmark.conf
+    state: link
+
+- name: Remover default
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - Reiniciar Nginx

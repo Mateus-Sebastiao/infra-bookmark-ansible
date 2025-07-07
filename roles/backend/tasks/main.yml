@@ -1,0 +1,14 @@
+---
+- name: Configurando o Gunicorn
+  ansible.builtin.copy:
+    src: gunicorn.service
+    dest: /etc/systemd/system/gunicorn.service
+    force: yes
+
+- name: Reexecutar systemd
+  ansible.builtin.command: systemctl daemon-reexec
+
+- name: Recarregar systemd
+  ansible.builtin.command: systemctl daemon-reload
+  notify:
+    - Reiniciar o gunicorn

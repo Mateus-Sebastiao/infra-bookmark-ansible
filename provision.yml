@@ -4,6 +4,23 @@
   become: true
 
   tasks:
-    - name: Instalar e configura o banco de dados
+    - name: Instalar e configurar o banco de dados
       include_role:
         name: database
+
+- name: Instalar o Webserver e o Python dependências
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Instalar e configurar o nginx e python...
+      include_role:
+        name: webserver
+
+    - name: Configurar o Proxy Reverso
+      include_role:
+        name: proxy_reverse_nginx
+
+    - name: Configurar o Gunicorn como serviço
+      include_role:
+        name: backend

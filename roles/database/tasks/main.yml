@@ -1,61 +1,61 @@
 ---
-    - name: Atualizar a cache e os pacotes
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
+- name: Atualizar a cache e os pacotes
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
 
-    - name: Instalar o banco de dados
-      ansible.builtin.apt:
-        name: 
-          - mysql-server
-          - python3-pymysql
-        state: present
+- name: Instalar o banco de dados
+  ansible.builtin.apt:
+    name: 
+      - mysql-server
+      - python3-pymysql
+    state: present
 
-    - name: Garantir que o root tenha senha
-      community.mysql.mysql_user:
-        name: root
-        password: "{{ database.root_password }}"
-        state: present
-        login_user: root
-        login_password: "{{ database.root_password }}"
-        login_unix_socket: /var/run/mysqld/mysqld.sock
+- name: Garantir que o root tenha senha
+  community.mysql.mysql_user:
+    name: root
+    password: "{{ database.root_password }}"
+    state: present
+    login_user: root
+    login_password: "{{ database.root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
 
-    - name: Criar o banco de dados da app
-      community.mysql.mysql_db:
-        name: "{{ database.db }}"
-        state: present
-        login_user: root
-        login_password: "{{ database.root_password }}"
+- name: Criar o banco de dados da app
+  community.mysql.mysql_db:
+    name: "{{ database.db }}"
+    state: present
+    login_user: root
+    login_password: "{{ database.root_password }}"
 
-    - name: Remover todos os usuários anónimos
-      community.mysql.mysql_user:
-        login_user: root
-        login_password: "{{ database.root_password }}"
-        name: ''
-        host_all: true
-        state: absent
+- name: Remover todos os usuários anónimos
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: "{{ database.root_password }}"
+    name: ''
+    host_all: true
+    state: absent
 
-    - name: Criar o usuário
-      community.mysql.mysql_user:
-        name: "{{ database.username }}"
-        password: "{{ database.user_password }}"
-        priv: "{{ database.db }}.*:ALL"
-        host: "%"
-        state: present
-        login_user: root
-        login_password: "{{ database.root_password }}"
+- name: Criar o usuário
+  community.mysql.mysql_user:
+    name: "{{ database.username }}"
+    password: "{{ database.user_password }}"
+    priv: "{{ database.db }}.*:ALL"
+    host: "%"
+    state: present
+    login_user: root
+    login_password: "{{ database.root_password }}"
 
-    - name: Garantir que o MySQL escuta na rede
-      lineinfile:
-        path: /etc/mysql/mysql.conf.d/mysqld.cnf
-        regexp: '^bind-address'
-        line: 'bind-address = 0.0.0.0'
-      notify:
-        - Reiniciar MySQL
+- name: Garantir que o MySQL escuta na rede
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+  notify:
+    - Reiniciar MySQL
     
-    - name: Firewall - Permitir conexões no banco de dados
-      ufw:
-        rule: allow
-        port: "3306"
-      tags:
-        - firewall
+- name: Firewall - Permitir conexões no banco de dados
+  ufw:
+    rule: allow
+    port: "3306"
+  tags:
+    - firewall

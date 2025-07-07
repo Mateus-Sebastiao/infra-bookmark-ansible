@@ -1,0 +1,20 @@
+# Vagrant
+.vagrant/
+
+# Banco de dados SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Ambientes Virtuais
+venv/
+.env/
+.venv/
+
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Variáveis de Ambiente
+.env

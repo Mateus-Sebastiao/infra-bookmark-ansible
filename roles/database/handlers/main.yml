@@ -1,0 +1,6 @@
+---
+- name: Reiniciar o MySQL
+  ansible.builtin.service:
+    name: mysql
+    state: restarted
+  listen: "Reiniciar MySQL"

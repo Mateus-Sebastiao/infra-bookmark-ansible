@@ -1,0 +1,9 @@
+---
+- name: Instalar o banco de dados
+  hosts: databases
+  become: true
+
+  tasks:
+    - name: Instalar e configura o banco de dados
+      include_role:
+        name: database

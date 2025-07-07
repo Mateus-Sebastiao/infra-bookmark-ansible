@@ -1,0 +1,6 @@
+---
+database:
+    root_password: senha123
+    db: bookmark_schema
+    username: mateus
+    user_password: bookmarksecret
